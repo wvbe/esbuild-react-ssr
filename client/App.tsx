@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
 const StyledComponentTest = styled.div<{ nerfs: boolean }>`
@@ -13,6 +13,9 @@ const StyledComponentTest = styled.div<{ nerfs: boolean }>`
 
 export const App: FunctionComponent = ({ children }) => {
 	const [isNerfs, setIsNerfs] = useState(false);
+	useEffect(() => {
+		console.log('SSSKKKRRRTTTT');
+	}, []);
 	return (
 		<div>
 			<button onClick={() => setIsNerfs(!isNerfs)}>Flip nerf</button>

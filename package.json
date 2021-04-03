@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "esbuild --version",
 		"start": "esbuild --bundle --platform=node build.ts | ESBUILD_BINARY_PATH=node_modules/esbuild/bin/esbuild node",
-		"build": "npm start --silent > dist/build.html",
+		"build": "npm start --silent > dist/index.html",
 		"watch": "npx chokidar-cli \"**/*.{ts,tsx}\" -c \"npm run build\""
 	},
 	"keywords": [],
@@ -14,12 +14,13 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@emotion/react": "^11.1.5",
+		"@emotion/server": "^11.0.0",
 		"@emotion/styled": "^11.1.5",
 		"@types/node": "^14.14.37",
-		"@types/react-dom": "^17.0.3",
 		"@types/react": "^17.0.3",
+		"@types/react-dom": "^17.0.3",
 		"esbuild": "^0.11.4",
-		"react-dom": "^17.0.2",
-		"react": "^17.0.2"
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2"
 	}
 }
