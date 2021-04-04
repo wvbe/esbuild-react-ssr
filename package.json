@@ -7,7 +7,7 @@
 		"test": "esbuild --version",
 		"start": "esbuild --bundle --platform=node build.ts | ESBUILD_BINARY_PATH=node_modules/esbuild/bin/esbuild node",
 		"build": "npm start --silent > dist/index.html",
-		"watch": "npx chokidar-cli \"**/*.{ts,tsx}\" -c \"npm run build\""
+		"watch": "npx chokidar-cli \"**/*.{ts,tsx}\" -c \"npm start\""
 	},
 	"keywords": [],
 	"author": "wvbe",

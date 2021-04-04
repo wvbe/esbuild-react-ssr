@@ -11,10 +11,10 @@ const StyledComponentTest = styled.div<{ nerfs: boolean }>`
 			: null}
 `;
 
-export const App: FunctionComponent = ({ children }) => {
+export const App: FunctionComponent = ({ title }) => {
 	const [isNerfs, setIsNerfs] = useState(false);
 	useEffect(() => {
-		console.log('SSSKKKRRRTTTT');
+		console.log('React has started');
 	}, []);
 	return (
 		<div>
@@ -22,7 +22,8 @@ export const App: FunctionComponent = ({ children }) => {
 			<StyledComponentTest nerfs={isNerfs}>
 				Status: {isNerfs ? 'Nerfing' : 'Not nerfing'}
 			</StyledComponentTest>
-			{children}
+			<b>TITLE</b>
+			{title}
 		</div>
 	);
 };
