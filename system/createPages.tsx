@@ -5,20 +5,26 @@ import createEmotionServer from '@emotion/server/create-instance';
 import esbuild from 'esbuild';
 import React, { FunctionComponent } from 'react';
 import * as Server from 'react-dom/server';
-import { cache, key } from '../shared/styleCache';
+import { cache, key } from './styleCache';
+
+import App from '../client/index';
+type AppProps = typeof App extends FunctionComponent<infer P> ? P : unknown;
 
 const { extractCritical } = createEmotionServer(cache);
 
 /**
  * Use esbuild to transform a Typescript codebase into a browser JS module
  */
-async function createBundle(scriptLocation: string) {
+async function createBundle() {
 	const { outputFiles } = await esbuild.build({
-		entryPoints: [scriptLocation],
+		// When piping esbuild output into node, __dirname is lost:
+		entryPoints: ['system/clientBundleEntry.ts'],
 		write: false,
 		bundle: true,
+
+		// @TODO make these configurable
 		minify: true,
-		sourcemap: false
+		sourcemap: true
 	});
 	return outputFiles
 		.map(outputFile => new TextDecoder().decode(outputFile.contents))
@@ -29,19 +35,12 @@ async function createBundle(scriptLocation: string) {
 /**
  * Use React SSR, emotion's cache and some other functions to generate a full HTML+CSS that hydrates itself.
  */
-export async function createHtml(
-	Component: FunctionComponent,
-	props: Record<string, any> = {},
-	scriptLocation: string
-) {
-	const element = React.createElement(
-			CacheProvider,
-			{ value: cache },
-			React.createElement(Component, props)
-		),
-		emotion = extractCritical(Server.renderToString(element)),
-		bundle = await createBundle(scriptLocation);
-
+async function createHtml({ bundle }: { bundle: string }, data: AppProps) {
+	const emotion = extractCritical(
+		Server.renderToString(
+			React.createElement(CacheProvider, { value: cache }, React.createElement(App, data))
+		)
+	);
 	return ((htmls: TemplateStringsArray, ...inputs: string[]) =>
 		htmls.reduce((flat, html, i) => flat + html.replace(/\n\t*/g, '') + (inputs[i] || ''), ''))`
 		<!DOCTYPE html>
@@ -58,7 +57,9 @@ export async function createHtml(
 				<div id="container">${emotion.html}</div>
 			</body>
 			<script type="text/javascript">
-				window.hydrationData = ${JSON.stringify(props)};
+				window.$$$r = ${JSON.stringify({
+					hydration: data
+				})};
 				${bundle};
 			</script>
 		</html>
@@ -66,19 +67,18 @@ export async function createHtml(
 }
 
 type BuildOptions = {
-	AppComponent: FunctionComponent;
-	scriptName: string;
 	distLocation: string;
 };
 
 type SystemTools = {
-	createPage: (path: string, data: Record<string, unknown>) => Promise<void>;
+	createPage: (path: string, data: AppProps) => Promise<void>;
 };
 
-export async function createSite(
-	{ AppComponent, scriptName, distLocation }: BuildOptions,
+export async function createSite<Component>(
+	{ distLocation }: BuildOptions,
 	callback: (tools: SystemTools) => Promise<void>
 ) {
+	const bundle = await createBundle();
 	const systemTools: SystemTools = {
 		createPage: async (url, data) => {
 			await fs.mkdir(path.join(distLocation, url), { recursive: true });
@@ -86,7 +86,7 @@ export async function createSite(
 				// The page with precomputed HTML and its hydration data:
 				fs.writeFile(
 					path.join(distLocation, url, 'index.html'),
-					await createHtml(AppComponent, data, scriptName)
+					await createHtml({ bundle }, data)
 				),
 				// The hydration data to an AJAXable JSON:
 				fs.writeFile(
@@ -97,10 +97,11 @@ export async function createSite(
 		}
 	};
 
+	console.log('Script start:    ' + new Date().toLocaleTimeString());
 	console.time('Script duration');
 
 	// Clean out the build location
-	await fs.rmdir(distLocation, { recursive: true });
+	// await fs.rmdir(distLocation, { recursive: true });
 	await fs.mkdir(distLocation, { recursive: true });
 
 	// Run the build configuration
@@ -117,5 +118,6 @@ export async function createSite(
 		console.groupEnd();
 	}
 
+	console.log('Script stop:     ' + new Date().toLocaleTimeString());
 	console.timeEnd('Script duration');
 }

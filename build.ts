@@ -1,15 +1,18 @@
-import path from 'path';
-import { createSite } from './build/createPages';
+/**
+ *
+ * This file contains the NodeJS-side of things.
+ *
+ */
 
-import { App } from './client/App';
+import { createSite } from './system/createPages';
 
 createSite(
 	{
-		AppComponent: App,
-		scriptName: path.resolve(__dirname, 'client.ts'),
-		distLocation: path.resolve(__dirname, 'dist')
+		distLocation: 'dist'
 	},
 	async ({ createPage }) => {
-		createPage('/nerf', { title: 'Hello world' });
+		await createPage('/', { title: 'This is the landing page' });
+		await createPage('/nerf', { title: 'This is the NERF page' });
+		await createPage('/derp', { title: 'This is the DERP page' });
 	}
 );

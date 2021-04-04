@@ -4,10 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "esbuild --version",
-		"start": "esbuild --bundle --platform=node build.ts | ESBUILD_BINARY_PATH=node_modules/esbuild/bin/esbuild node",
-		"build": "npm start --silent > dist/index.html",
-		"watch": "npx chokidar-cli \"**/*.{ts,tsx}\" -c \"npm start\""
+		"build": "esbuild --bundle --platform=node build.ts | ESBUILD_BINARY_PATH=node_modules/esbuild/bin/esbuild node",
+		"watch": "npm run build && npx chokidar-cli \"**/*.{ts,tsx}\" -c \"npm run build\"",
+		"deploy": "npx gh-pages -d dist"
 	},
 	"keywords": [],
 	"author": "wvbe",
