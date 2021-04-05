@@ -41,7 +41,7 @@ async function createBundle() {
 /**
  * Use React SSR, emotion's cache and some other functions to generate a full HTML+CSS that hydrates itself.
  */
-async function createHtml({ bundle }: { bundle: string }, data: AppProps) {
+async function createHtml({ bundle, base }: { bundle: string; base: string }, data: AppProps) {
 	const emotion = extractCritical(
 		Server.renderToString(
 			React.createElement(CacheProvider, { value: cache }, React.createElement(App, data))
@@ -52,6 +52,7 @@ async function createHtml({ bundle }: { bundle: string }, data: AppProps) {
 		<!DOCTYPE html>
 		<html lang="en">
 			<head>
+				<base href="${base}" />
 				<meta charset="UTF-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -92,7 +93,7 @@ export async function createSite<Component>(
 				// The page with precomputed HTML and its hydration data:
 				fs.writeFile(
 					path.join(distLocation, url, 'index.html'),
-					await createHtml({ bundle }, data)
+					await createHtml({ bundle, base: path.relative(url, '/') || '.' }, data)
 				),
 				// The hydration data to an AJAXable JSON:
 				fs.writeFile(

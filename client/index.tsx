@@ -44,10 +44,9 @@ const App: FunctionComponent<{ title: string }> = ({ title }) => {
 			<ul>
 				<li>
 					<Label>Navigation test: </Label>
-					<a href="/nerf">Go /nerf</a>, <a href="/derp">Go /derp</a>,{' '}
-					<a href="/nerf/">Go /nerf/</a>, <a href="/derp/">Go /derp/</a>,{' '}
-					<a href="/nerf/index.html">Go /nerf/index.html</a>,{' '}
-					<a href="/derp/index.html">Go /derp/index.html</a>,{' '}
+					<a href=".">Go /</a>, <a href="nerf">Go /nerf</a>, <a href="derp">Go /derp</a>,{' '}
+					<a href="nerf/index.html">Go /nerf/index.html</a>,{' '}
+					<a href="derp/index.html">Go /derp/index.html</a>,{' '}
 					<a href="//wybe.pizza">Go external</a>
 				</li>
 				<li>
