@@ -18,12 +18,18 @@ const { extractCritical } = createEmotionServer(cache);
 async function createBundle() {
 	const { outputFiles } = await esbuild.build({
 		// When piping esbuild output into node, __dirname is lost:
-		entryPoints: ['system/clientBundleEntry.ts'],
+		entryPoints: ['system/clientBundleEntry.tsx'],
 		write: false,
 		bundle: true,
 
+		loader: {
+			'.jpg': 'dataurl',
+			'.png': 'dataurl',
+			'.gif': 'dataurl'
+		},
+
 		// @TODO make these configurable
-		minify: true,
+		minify: false,
 		sourcemap: true
 	});
 	return outputFiles

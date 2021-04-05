@@ -9,6 +9,8 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css, Global } from '@emotion/react';
 
+import jesusVaccinatesImage from '../assets/pizza.png';
+
 const globalStyles = css`
 	body {
 		font-family: sans-serif;
@@ -42,7 +44,11 @@ const App: FunctionComponent<{ title: string }> = ({ title }) => {
 			<ul>
 				<li>
 					<Label>Navigation test: </Label>
-					<a href="/nerf">Go nerf</a>, <a href="/derp">Go derp</a>
+					<a href="/nerf">Go /nerf</a>, <a href="/derp">Go /derp</a>,{' '}
+					<a href="/nerf/">Go /nerf/</a>, <a href="/derp/">Go /derp/</a>,{' '}
+					<a href="/nerf/index.html">Go /nerf/index.html</a>,{' '}
+					<a href="/derp/index.html">Go /derp/index.html</a>,{' '}
+					<a href="//wybe.pizza">Go external</a>
 				</li>
 				<li>
 					<Label>Style test:</Label>
@@ -54,6 +60,10 @@ const App: FunctionComponent<{ title: string }> = ({ title }) => {
 				<li>
 					<Label>Page data test:</Label>
 					{title}
+				</li>
+				<li>
+					<Label>Asset test:</Label>
+					<img src={jesusVaccinatesImage} />
 				</li>
 			</ul>
 		</>

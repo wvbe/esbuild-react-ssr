@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"build": "esbuild --bundle --platform=node build.ts | ESBUILD_BINARY_PATH=node_modules/esbuild/bin/esbuild node",
+		"build": "esbuild --bundle --loader:.jpg=dataurl --loader:.png=dataurl --loader:.gif=dataurl --platform=node build.ts | ESBUILD_BINARY_PATH=node_modules/esbuild/bin/esbuild node",
 		"watch": "npm run build && npx chokidar-cli \"**/*.{ts,tsx}\" -c \"npm run build\"",
 		"deploy": "npx gh-pages -d dist"
 	},
