@@ -8,7 +8,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css, Global } from '@emotion/react';
-
 import jesusVaccinatesImage from '../assets/pizza.png';
 
 const globalStyles = css`
